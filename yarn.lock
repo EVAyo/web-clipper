@@ -750,10 +750,10 @@
   dependencies:
     classnames "*"
 
-"@types/codemirror@^0.0.76":
-  version "0.0.76"
-  resolved "https://registry.nlark.com/@types/codemirror/download/@types/codemirror-0.0.76.tgz#c52719878056a216bc05889b46a41d4eb1434423"
-  integrity sha1-xScZh4BWoha8BYibRqQdTrFDRCM=
+"@types/codemirror@^5.60.4":
+  version "5.60.4"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-5.60.4.tgz#aa19477782fb1bd26f8a0e240ca4241f35c4170e"
+  integrity sha512-SUQgBj9jZ+xj75zgwfgQZt0CManWBISN/YsE0xRmPwO6uDyLNpXO8bn2m59tpevsFw+eQdmx+qY1WjOrUgMDgw==
   dependencies:
     "@types/tern" "*"
 
@@ -7404,11 +7404,6 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.nlark.com/p-try/download/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha1-yyhoVA4xPWHeWPr741zpAE1VQOY=
-
-pako@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.npm.taobao.org/pako/download/pako-2.0.3.tgz?cache=0&sync_timestamp=1610208910632&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fpako%2Fdownload%2Fpako-2.0.3.tgz#cdf475e31b678565251406de9e759196a0ea7a43"
-  integrity sha1-zfR14xtnhWUlFAbennWRlqDqekM=
 
 pako@~1.0.5:
   version "1.0.11"
