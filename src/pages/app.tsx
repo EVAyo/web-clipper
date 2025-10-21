@@ -1,4 +1,5 @@
-import Container, { Service } from 'typedi';
+import 'antd/dist/antd.less';
+import Container from 'typedi';
 import React from 'react';
 import dva, { router } from 'dva';
 import { createHashHistory } from 'history';
@@ -13,22 +14,16 @@ import LocalWrapper from './locale';
 import { localStorageService, syncStorageService } from '@/common/chrome/storage';
 import localeService from '@/common/locales';
 import AuthPage from '@/pages/auth';
-import LoginPage from '@/pages/login';
 import account from '@/models/account';
 import { message } from 'antd';
 import { IConfigService } from '@/service/common/config';
 import { ILocalStorageService, ISyncStorageService } from '@/service/common/storage';
-import { IPowerpackService } from '@/service/common/powerpack';
 import './app.less';
-import { ITrackService } from '@/service/common/track';
 Container.set(ILocalStorageService, localStorageService);
 Container.set(ISyncStorageService, syncStorageService);
 import '@/service/preference/browser/preferenceService';
 import { IPreferenceService } from '@/service/common/preference';
 import '@/services/environment/common/environmentService';
-import { BackendService } from '@/services/backend/common/backendService';
-import { IBackendService } from '@/services/backend/common/backend';
-import { PowerpackService } from '@/service/powerpackService';
 const { Route, Switch, Router, withRouter } = router;
 
 function withTool(WrappedComponent: any): any {
@@ -50,29 +45,25 @@ export default async () => {
   await localStorageService.init();
   await localeService.init();
   Container.get(IConfigService).load();
-  Container.get(ITrackService).init();
-  Service(IBackendService)(BackendService);
-  Service(IPowerpackService)(PowerpackService);
-  Container.get(IPowerpackService).startup();
   await Container.get(IPreferenceService).init();
   const app = dva({
     namespacePrefixWarning: false,
     history: createHashHistory(),
-    onError: e => {
+    onError: (e) => {
       (e as any).preventDefault();
       message.destroy();
       message.error(e.message);
+      message.error(e.stack);
     },
   });
   app.use(createLoading());
 
-  app.router(router => {
+  app.router((router) => {
     return (
       <LocalWrapper>
         <Router history={router!.history}>
           <Switch>
             <Route exact path="/" component={Tool} />
-            <Route exact path="/login" component={LoginPage} />
             <Route exact path="/auth" component={AuthPage} />
             <Route exact path="/complete" component={Complete} />
             <Route path="/editor" component={withTool(PluginPage)} />

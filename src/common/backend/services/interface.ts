@@ -67,12 +67,14 @@ export interface ServiceMeta {
   permission?: chrome.permissions.Permissions;
 }
 
+export interface UpdateTOCRequest {}
+
 export interface DocumentService<T = any> {
   getId(): string;
 
   getRepositories(): Promise<Repository[]>;
 
-  createDocument(request: CreateDocumentRequest): Promise<CompleteStatus | void>;
+  createDocument(request: T): Promise<CompleteStatus | void>;
 
   getUserInfo(): Promise<UserInfo>;
 

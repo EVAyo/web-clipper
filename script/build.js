@@ -6,12 +6,15 @@ function send(data) {
   if (!process.send) {
     return;
   }
-  return new Promise(r => {
+  return new Promise((r) => {
     process.send(data, null, {}, r);
   });
 }
 
-compiler.run(() => {
+compiler.run((err) => {
+  if (err) {
+    console.log(err);
+  }
   send({
     type: 'Success',
   });

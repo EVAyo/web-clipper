@@ -3,39 +3,25 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtensionReloader = require('webpack-extension-reloader');
-const tsImportPluginFactory = require('ts-import-plugin');
-const WebpackCreateExtensionManifestPlugin = require('webpack-create-extension-manifest-plugin');
+const {
+  WebpackCreateExtensionManifestPlugin,
+} = require('./plugin/webpack-create-extension-manifest-plugin');
 const fs = require('fs');
-
-const { getBasicManifest, generateManifest } = require('./utils/manifest');
-const basicManifest = getBasicManifest();
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-const publishToStore = process.env.PUBLISH_TO_STORE === 'true';
-const targetBrowser = process.env.TARGET_BROWSER || 'Chrome';
-
-const manifestExtra = generateManifest({ targetBrowser, publishToStore, basicManifest });
-const distFiles = fs.readdirSync(resolve('dist')).filter(o => o !== '.gitkeep');
-
-let background = resolve('src/main/background.main.chrome.ts');
-let tool = resolve('src/main/tool.main.chrome.ts');
-if (targetBrowser === 'Firefox') {
-  background = resolve('src/main/background.main.firefox.ts');
-  tool = resolve('src/main/tool.main.firefox.ts');
-}
+const distFiles = fs.readdirSync(resolve('dist')).filter((o) => o !== '.gitkeep');
 
 module.exports = {
   entry: {
-    tool,
+    tool: resolve('src/main/tool.main.chrome.ts'),
     content_script: resolve('src/main/contentScript.main.ts'),
-    background,
+    background: resolve('src/main/background.worker.ts'),
   },
   output: {
-    path: resolve('dist'),
+    path: resolve('dist/chrome'),
     filename: '[name].js',
   },
   optimization: {
@@ -65,22 +51,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.md$/,
+        use: 'raw-loader',
+      },
+      {
         test: /\.(jsx|tsx|js|ts)$/,
         loader: 'ts-loader',
         options: {
           transpileOnly: true,
           getCustomTransformers: () => ({
-            before: [
-              tsImportPluginFactory([
-                {
-                  style: false,
-                  libraryName: 'lodash',
-                  libraryDirectory: null,
-                  camel2DashComponentName: false,
-                },
-                { style: true },
-              ]),
-            ],
+            before: [],
           }),
           compilerOptions: {
             module: 'esnext',
@@ -165,25 +145,12 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.DefinePlugin({
-      WEB_CLIPPER_VERSION: JSON.stringify(basicManifest.version),
-    }),
-    process.env.NODE_ENV === 'development'
-      ? new ExtensionReloader({
-          port: 9091,
-          reloadPage: false,
-          entries: {
-            contentScript: 'content_script',
-            background: 'background',
-          },
-        })
-      : null,
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
     }),
     new CleanWebpackPlugin(
-      distFiles.map(p => `dist/${p}`),
+      distFiles.map((p) => `dist/${p}`),
       {
         root: path.resolve(__dirname, '../'),
         verbose: true,
@@ -191,25 +158,29 @@ module.exports = {
     ),
     new CopyWebpackPlugin([
       {
+        from: resolve('chrome/html'),
+        to: resolve('dist/chrome'),
+        ignore: ['.*'],
+      },
+      {
         from: resolve('chrome/js'),
-        to: resolve('dist'),
+        to: resolve('dist/chrome'),
         ignore: ['.*'],
       },
       {
         from: resolve('chrome/icons'),
-        to: resolve('dist'),
+        to: resolve('dist/chrome/icons'),
         ignore: ['.*'],
       },
     ]),
     new WebpackCreateExtensionManifestPlugin({
-      output: resolve('dist/manifest.json'),
-      extra: manifestExtra,
+      output: resolve('dist'),
     }),
     new HtmlWebpackPlugin({
       title: 'Web Clipper',
-      filename: resolve('dist/tool.html'),
+      filename: resolve('dist/chrome/tool.html'),
       chunks: ['tool'],
       template: 'src/index.html',
     }),
-  ].filter(plugin => !!plugin),
+  ].filter((plugin) => !!plugin),
 };

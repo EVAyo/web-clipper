@@ -1,5 +1,3 @@
-import { IBackendService } from '@/services/backend/common/backend';
-import { ITrackService } from '@/service/common/track';
 import { IContentScriptService } from '@/service/common/contentScript';
 import { ITabService } from '@/service/common/tab';
 import { Container } from 'typedi';
@@ -127,7 +125,7 @@ builder
       );
       closeModal();
     } catch (error) {
-      message.error(error.message);
+      message.error((error as Error).message);
     }
   })
   .takeEvery(asyncDeleteImageHosting.started, function*(payload, { call, put }) {
@@ -172,7 +170,7 @@ builder
       );
       closeModal();
     } catch (error) {
-      message.error(error.message);
+      message.error((error as Error).message);
     }
   })
   .takeEvery(asyncRunExtension.started, function*({ extension, pathname }, { call, put, select }) {
@@ -240,14 +238,11 @@ builder
           React,
           pangu,
           config,
-          ocr: async r => {
-            return Container.get(IBackendService).ocr(r);
-          },
         };
         //@ts-ignore
         result = yield call(afterRun, context);
       } catch (error) {
-        message.error(error.message);
+        message.error((error as Error).message);
       }
     }
     if (destroy) {
@@ -350,11 +345,5 @@ builder
       servicesMeta,
     };
   });
-
-builder.subscript(function trackLoadPage({ history }) {
-  history.listen(e => {
-    Container.get(ITrackService).trackEvent('Open_Page', e.pathname);
-  });
-});
 
 export default builder.build();

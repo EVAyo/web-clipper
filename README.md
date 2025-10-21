@@ -17,8 +17,11 @@ You can use Web Clipper to save anything on the web to anywhere.
 
 ### Support Site
 
+- [FlowUs](https://flowus.cn/)
+- [Obsidian](https://obsidian.md/)
 - [Github](https://github.com)
 - [Yuque](https://www.yuque.com)
+- [Buildin.AI](https://buildin.ai/product)
 - [Notion](https://www.notion.so/)
 - [Youdao](https://note.youdao.com/)
 - [OneNote](https://www.onenote.com/)
@@ -30,16 +33,15 @@ You can use Web Clipper to save anything on the web to anywhere.
 - [wolai](https://www.wolai.com/)
 - [Leanote](https://github.com/leanote/leanote)
 - [Flomo](https://flomoapp.com/)
+- [Siyuan](https://b3log.org/siyuan)
+- [Ulysses](https://ulysses.app/)
+- [Confluence](https://www.atlassian.com/software/confluence)
 
 ### Install
 
-- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/universal-web-clipper/) 1.30.0
+- [Chrome](https://chrome.google.com/webstore/detail/web-clipper/mhfbofiokmppgdliakminbgdgcmbhbac)
 
-- [Chrome](https://chrome.google.com/webstore/detail/web-clipper/mhfbofiokmppgdliakminbgdgcmbhbac) 1.30.0
-
-- [Chrome Beta](https://chrome.google.com/webstore/detail/web-clipper/finhmpmkpbacljcdemplngnnjdenihpp?hl=zh-CN&authuser=0) 1.28.4
-
-- [Edge](https://microsoftedge.microsoft.com/addons/detail/opejamnnohhbjflpbhnmdlknhjkfhfdp) 1.30.0
+- [Edge](https://microsoftedge.microsoft.com/addons/detail/opejamnnohhbjflpbhnmdlknhjkfhfdp)
 
 ps: Because the review takes a week, the version will fall behind.
 
@@ -50,22 +52,23 @@ ps: Because the review takes a week, the version will fall behind.
 3. Locate the ZIP file on your computer and unzip it.
 4. Go back to the chrome://extensions/ page and click the **Load unpacked extension** button and select the unzipped folder for your extension to install it.
 
-[Canary](https://github.com/webclipper/web-clipper/releases/tag/canary)
-
 ### Develop
 
 ```bash
 $ git clone https://github.com/webclipper/web-clipper.git
 $ cd web-clipper
-$ yarn
-$ yarn dev # Chrome
-$ yarn dev:ff # Firebox
+$ npm i
+$ npm run dev
 ```
+
+- You should load the 'dist/chrome' folder in Chrome.
+
+- You should load the 'dist/manifest.json' folder in Firefox.
 
 ### Test
 
 ```bash
-$ yarn test
+$ npm run test
 ```
 
 ### Feedback
